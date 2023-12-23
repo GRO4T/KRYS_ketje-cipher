@@ -1,0 +1,3 @@
+[submodule "extern/XKCP"]
+	path = extern/XKCP
+	url = https://github.com/XKCP/XKCP
