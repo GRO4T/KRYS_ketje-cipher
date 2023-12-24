@@ -4,3 +4,6 @@
 [submodule "extern/KeccakTools"]
 	path = extern/KeccakTools
 	url = git@github.com:KeccakTeam/KeccakTools.git
+[submodule "extern/Ketje"]
+	path = extern/Ketje
+	url = git@github.com:jackap/Ketje.git
