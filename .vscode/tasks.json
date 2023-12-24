@@ -5,6 +5,14 @@
             "label": "Build Ketje",
             "type": "shell",
             "command": "make ketje",
+        },
+        {
+            "label": "Build extern/Ketje/ketje_driver",
+            "type": "shell",
+            "command": "make",
+            "options": {
+                "cwd": "${workspaceFolder}/extern/Ketje"
+            },
         }
     ]
 }
