@@ -13,6 +13,7 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "lldb",
+            "preLaunchTask": "Build Ketje"
         }
     ]
 }
