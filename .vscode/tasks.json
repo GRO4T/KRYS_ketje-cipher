@@ -4,7 +4,10 @@
         {
             "label": "Build Ketje",
             "type": "shell",
-            "command": "make ketje",
+            "command": "cmake .. && make",
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
         },
         {
             "label": "Build extern/Ketje/ketje_driver",
