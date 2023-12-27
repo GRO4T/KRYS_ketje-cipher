@@ -17,7 +17,15 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #include "crypto_aead.h"
 
 #include <string.h>
+#include <stdio.h>
 #include "Ketjev2.h"
+
+void print_hex(unsigned char *s)
+{
+  while(*s)
+    printf("%02x", (unsigned int) *s++);
+  printf("\n");
+}
 
 int crypto_aead_encrypt(
     unsigned char *c,unsigned long long *clen,
@@ -60,6 +68,12 @@ int crypto_aead_decrypt(
     *mlen = clen-12;
     KetjeJr_UnwrapCiphertext(&instance, c, m, *mlen);
     KetjeJr_GetTag(&instance, tag, 12);
+    printf("c=");
+    print_hex(c);
+    printf("ctag=");
+    print_hex(c+(*mlen));
+    printf("tag=");
+    print_hex(&tag);
     if (memcmp(tag, c+(*mlen), 12) != 0) {
         memset(m, 0, *mlen);
         return -1;
