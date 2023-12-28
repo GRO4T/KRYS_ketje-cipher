@@ -1,8 +1,8 @@
 #include <assert.h>
 #include <iostream>
 
-#include "monkeyduplex.h"
-#include "padding.h"
+#include "monkeyduplex.hpp"
+#include "padding.hpp"
 
 extern "C"{
   #include "KeccakP-200-SnP.h"

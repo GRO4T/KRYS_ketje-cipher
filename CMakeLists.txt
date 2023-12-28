@@ -24,9 +24,11 @@ add_subdirectory(lib/Ketje_XKCP)
 enable_testing()
 # Test Ketje XKCP implementation
 add_executable(KetjeXKCPTest test/test_ketje_xkcp.cpp)
-target_include_directories(KetjeXKCPTest PRIVATE lib/ketje)
+target_include_directories(KetjeXKCPTest PRIVATE lib/Ketje_XKCP)
 target_link_libraries(KetjeXKCPTest PRIVATE GTest::GTest KetjeXKCPImpl)
 add_test(UnitTests KetjeXKCPTest)
 
 # Build source
-add_executable(Ketje main.c)
+add_executable(Ketje main.cpp src/monkeyduplex.cpp src/padding.cpp)
+target_include_directories(Ketje PRIVATE include)
+target_link_libraries(Ketje PRIVATE KetjeXKCPImpl)
