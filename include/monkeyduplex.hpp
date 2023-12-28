@@ -1,5 +1,4 @@
-#ifndef _monkeyduplex_h_
-#define _monkeyduplex_h_
+#pragma once
 
 #include <string>
 
@@ -18,5 +17,3 @@ class MonkeyDuplex{
     unsigned int nstep;
     unsigned int nstride;
 };
-
-#endif

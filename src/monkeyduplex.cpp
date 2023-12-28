@@ -2,25 +2,10 @@
 #include <iostream>
 
 #include "monkeyduplex.hpp"
-#include "padding.hpp"
+#include "utils.hpp"
 
 extern "C"{
   #include "KeccakP-200-SnP.h"
-}
-
-// https://stackoverflow.com/a/3382894
-std::string string_to_hex(const std::string& input)
-{
-    static const char hex_digits[] = "0123456789ABCDEF";
-
-    std::string output;
-    output.reserve(input.length() * 2);
-    for (unsigned char c : input)
-    {
-        output.push_back(hex_digits[c >> 4]);
-        output.push_back(hex_digits[c & 15]);
-    }
-    return output;
 }
 
 MonkeyDuplex::MonkeyDuplex(unsigned int r, unsigned int nstart, unsigned int nstep, unsigned int nstride)

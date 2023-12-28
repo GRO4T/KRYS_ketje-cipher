@@ -29,8 +29,13 @@ add_executable(KetjeXKCPTest test/test_ketje_xkcp.cpp)
 target_include_directories(KetjeXKCPTest PRIVATE lib/Ketje_XKCP)
 target_link_libraries(KetjeXKCPTest PRIVATE GTest::GTest KetjeXKCPImpl)
 add_test(UnitTests KetjeXKCPTest)
+# Test our Ketje implementation
+add_executable(KetjeTest test/test_ketje.cpp src/utils.cpp)
+target_include_directories(KetjeTest PRIVATE include)
+target_link_libraries(KetjeTest PRIVATE GTest::GTest)
+add_test(UnitTests KetjeTest)
 
 # Build source
-add_executable(Ketje main.cpp src/monkeyduplex.cpp src/padding.cpp)
+add_executable(Ketje main.cpp src/monkeyduplex.cpp src/utils.cpp)
 target_include_directories(Ketje PRIVATE include)
 target_link_libraries(Ketje PRIVATE KetjeXKCPImpl)
