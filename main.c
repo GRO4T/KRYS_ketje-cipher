@@ -78,17 +78,14 @@ int test_crypto_aead(
 
 int main(void) {
     const unsigned char *key = (const unsigned char *)
-        "\x5a\x4b\x3c\x2d\x1e\x0f\x00\xf1\xe2\xd3\xc4\xb5\xa6\x97\x88\x79";
-    const unsigned char *nonce_ = (const unsigned char *)
-        "\x6b\x4c\x2d\x0e\xef\xd0\xb1\x92\x72\x53\x34\x15\xf6\xd7\xb8\x99";
+        "\x14\x5e\xa8\xf2\x3d\x87\xd1\x1c\x66\xb0\xfa\x45";
+    const unsigned char *nonce = (const unsigned char *)
+        "\x15\x70\xcb\x27\x82\xdd\x39\x94\xef\x4b";
     const unsigned char *AD = (const unsigned char *)
-        "\x32\xf3\xb4\x75\x35\xf6";
+        "\x0c\x78\xe4\x51\xbd\x2a";
     const unsigned char *plaintext = (const unsigned char *)
-        "\xe4\x65\xe5\x66\xe6\x67\xe7";
+        "\x0e\x8b\x09\x86\x04\x81\xfe";
     const unsigned char *ciphertext = (const unsigned char *)
-        "\x0c\x20\x01\x37\x08\xb7\xdb\x7c\xe0\x47\xac\xd4\x69\xb7\x5c\xc1\xf2\xc3\x06\x76\x5b\xb5\x98";
-    unsigned char nonce[181];
-    memset(nonce, 0, 181);
-    memcpy(nonce, nonce_, 16);
-    return test_crypto_aead(key, 16, nonce, 181, AD, 6, plaintext, 7, ciphertext, 16);
-}   
+        "\x9d\x09\x58\x2b\xce\xff\xd6\x44\x7b\x5e\xeb\x2b\xa5\x5a\x85\x11\xbc\xd0\x06";
+    return test_crypto_aead(key, 12, nonce, 10, AD, 6, plaintext, 7, ciphertext, 12);
+}
