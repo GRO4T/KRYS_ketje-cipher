@@ -1,4 +1,4 @@
-add_library(KetjeLib
+add_library(KetjeXKCPImpl
     encrypt.c
     KeccakP-200-compact.c
     Ketjev2.c
@@ -7,4 +7,4 @@ add_library(KetjeLib
     Ket.inc
 )
 
-target_include_directories(KetjeLib INTERFACE .)
+target_include_directories(KetjeXKCPImpl INTERFACE .)

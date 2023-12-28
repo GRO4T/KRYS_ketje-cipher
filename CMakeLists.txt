@@ -18,17 +18,15 @@ add_library(GTest::GTest INTERFACE IMPORTED)
 target_link_libraries(GTest::GTest INTERFACE gtest_main)
 
 # Add XKCP
-add_subdirectory(lib/ketje)
+add_subdirectory(lib/Ketje_XKCP)
 
 # Build tests
 enable_testing()
-add_executable(KetjeTest test/test_keccak.cpp)
-target_link_libraries(KetjeTest PRIVATE GTest::GTest)
-add_test(UnitTests KetjeTest)
+# Test Ketje XKCP implementation
+add_executable(KetjeXKCPTest test/test_ketje_xkcp.cpp)
+target_include_directories(KetjeXKCPTest PRIVATE lib/ketje)
+target_link_libraries(KetjeXKCPTest PRIVATE GTest::GTest KetjeXKCPImpl)
+add_test(UnitTests KetjeXKCPTest)
 
 # Build source
 add_executable(Ketje main.c)
-
-target_include_directories(Ketje PRIVATE lib/ketje)
-
-target_link_libraries(Ketje PRIVATE KetjeLib)
