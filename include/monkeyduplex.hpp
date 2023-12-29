@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <cstdint>
 
 // Ketje Jr: keccak-pstar[200]
 #define STATE_BYTES 25
@@ -11,7 +12,7 @@ class MonkeyDuplex{
     MonkeyDuplex(unsigned int r, unsigned int nstart, unsigned int nstep, unsigned int nstride);
     void start(std::string I);
   private:
-    char state[STATE_BYTES];
+    uint8_t state[STATE_BYTES];
     unsigned int r;
     unsigned int nstart;
     unsigned int nstep;

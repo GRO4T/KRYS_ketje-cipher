@@ -19,16 +19,18 @@ FetchContent_MakeAvailable(googletest)
 add_library(GTest::GTest INTERFACE IMPORTED)
 target_link_libraries(GTest::GTest INTERFACE gtest_main)
 
-# Add XKCP
-add_subdirectory(lib/Ketje_XKCP)
+# Add KeccakTools
+add_subdirectory(lib/KeccakTools)
 
 # Build tests
 enable_testing()
-# Test Ketje XKCP implementation
-add_executable(KetjeXKCPTest test/test_ketje_xkcp.cpp)
-target_include_directories(KetjeXKCPTest PRIVATE lib/Ketje_XKCP)
-target_link_libraries(KetjeXKCPTest PRIVATE GTest::GTest KetjeXKCPImpl)
-add_test(UnitTests KetjeXKCPTest)
+
+# Test KeccakTools implementation
+add_executable(KeccakToolsTest test/test_ketje_keccaktools.cpp)
+target_include_directories(KeccakToolsTest PRIVATE lib/KeccakTools)
+target_link_libraries(KeccakToolsTest PRIVATE GTest::GTest KeccakTools)
+add_test(UnitTests KeccakTools)
+
 # Test our Ketje implementation
 add_executable(KetjeTest test/test_ketje.cpp src/utils.cpp)
 target_include_directories(KetjeTest PRIVATE include)
@@ -38,4 +40,4 @@ add_test(UnitTests KetjeTest)
 # Build source
 add_executable(Ketje main.cpp src/monkeyduplex.cpp src/utils.cpp)
 target_include_directories(Ketje PRIVATE include)
-target_link_libraries(Ketje PRIVATE KetjeXKCPImpl)
+target_link_libraries(Ketje PRIVATE KeccakTools)
