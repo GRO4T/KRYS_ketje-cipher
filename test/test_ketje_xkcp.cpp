@@ -5,7 +5,9 @@
 #include <string.h>
 
 extern "C" {
+
 #include "crypto_aead.h"
+  #include "KeccakP-200-SnP.h"
 }
 
 int do_test_crypto_aead(
@@ -77,6 +79,19 @@ int test_crypto_aead(
     free(temp2);
     return retcode;
 }
+std::string string_to_hex(const std::string& input)
+{
+    static const char hex_digits[] = "0123456789ABCDEF";
+
+    std::string output;
+    output.reserve(input.length() * 2);
+    for (unsigned char c : input)
+    {
+        output.push_back(hex_digits[c >> 4]);
+        output.push_back(hex_digits[c & 15]);
+    }
+    return output;
+}
 
 TEST(TestKetjeXKCP, TestEncryptDecrypt)
 {
@@ -91,6 +106,21 @@ TEST(TestKetjeXKCP, TestEncryptDecrypt)
     const unsigned char *ciphertext = (const unsigned char *)
         "\x9d\x09\x58\x2b\xce\xff\xd6\x44\x7b\x5e\xeb\x2b\xa5\x5a\x85\x11\xbc\xd0\x06";
     EXPECT_EQ(0, test_crypto_aead(key, 12, nonce, 10, AD, 6, plaintext, 7, ciphertext, 12));
+}
+
+TEST(TestKetjeXKCP, TestKeccakP)
+{
+    // uint8_t state [25] = {
+    //    54, 153,  60, 209,  81,  47,  28,  72, 218,  17,  94, 126, 116,
+    //    193,   4,  42, 198,   0, 219,  85,  12,   6, 144, 136, 139
+    // };
+    uint8_t state[25] = {
+    0x31,0x32,0x33,0x34,0x01,00,00,00,00,00,00,00,00,
+    00,00,00,00,00,00,00,00,00,00,00,0x80
+    };
+    std::cout << string_to_hex(std::string((char*)state,25)) << std::endl;
+    KeccakP200_Permute_Nrounds(state, 10);
+    std::cout << string_to_hex(std::string((char*)state,25)) << std::endl;
 }
 
 int main(int argc, char** argv)
