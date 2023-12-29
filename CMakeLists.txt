@@ -29,7 +29,7 @@ enable_testing()
 add_executable(KeccakToolsTest test/test_ketje_keccaktools.cpp)
 target_include_directories(KeccakToolsTest PRIVATE lib/KeccakTools)
 target_link_libraries(KeccakToolsTest PRIVATE GTest::GTest KeccakTools)
-add_test(UnitTests KeccakTools)
+add_test(UnitTests KeccakToolsTest)
 
 # Test our Ketje implementation
 add_executable(KetjeTest test/test_ketje.cpp src/utils.cpp)
