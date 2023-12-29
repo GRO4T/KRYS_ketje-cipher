@@ -3,14 +3,16 @@
 #include <string>
 #include <cstdint>
 
+#include "bitstring.h"
+
 // Ketje Jr: keccak-pstar[200]
 #define STATE_BYTES 25
+#define STATE_BITS (STATE_BYTES*8)
 
-//TODO: make generic for all state sizes
 class MonkeyDuplex{
   public:
     MonkeyDuplex(unsigned int r, unsigned int nstart, unsigned int nstep, unsigned int nstride);
-    void start(std::string I);
+    void start(BitString I);
   private:
     uint8_t state[STATE_BYTES];
     unsigned int r;

@@ -2,5 +2,5 @@
 
 int main(void) {
     MonkeyDuplex md = MonkeyDuplex(10, 10, 1, 10);
-    md.start("1234");
+    md.start(BitString("1234"));
 }

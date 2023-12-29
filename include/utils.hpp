@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <cstdint>
 
 
 /*
@@ -9,4 +10,5 @@
  */
 void pad101(std::string &data, unsigned int r);
 
-std::string string_to_hex(const std::string& input);
+std::string format_hex(const uint8_t *input, size_t n);
+std::string format_hex(const std::string& input);

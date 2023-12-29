@@ -11,7 +11,7 @@ TEST(TestKetje, TestPadding)
     // Act
     pad101(data, 25);
     // Assert
-    EXPECT_EQ(string_to_hex(data), expected_output);
+    EXPECT_EQ(format_hex(data), expected_output);
 }
 
 int main(int argc, char** argv)
