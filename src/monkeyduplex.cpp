@@ -7,6 +7,8 @@
 
 #include "Keccak-f.h"
 
+using namespace Krys;
+
 MonkeyDuplex::MonkeyDuplex(unsigned int r, unsigned int nstart, unsigned int nstep, unsigned int nstride)
       : r(r),
         nstart(nstart),

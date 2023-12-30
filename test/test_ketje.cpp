@@ -1,9 +1,10 @@
 #include <gtest/gtest.h>
 
-
 #include "monkeyduplex.hpp"
 #include "utils.hpp"
 
+#include <monkey.h>
+#include <Keccak-f.h>
 
 TEST(TestKetje, TestPadding)
 {
@@ -17,11 +18,15 @@ TEST(TestKetje, TestPadding)
 }
 
 TEST(TestKetje, TestMonkeyDuplex){
-    MonkeyDuplex md = MonkeyDuplex(20, 10, 1, 10);
+    Krys::MonkeyDuplex md = Krys::MonkeyDuplex(20, 10, 1, 10);
     md.start(BitString("1234"));
     BitString x = md.step(BitString("xy"), 16);
-    BitString expected = BitString("\x06\xc7");
-    EXPECT_EQ(x, expected);
+
+    IterableTransformation<KeccakPStar> f(200);
+    MonkeyDuplex md_ref = MonkeyDuplex(f, 20, 10, 1, 10);
+    md_ref.start(BitString("1234"));
+    BitString x_ref = md_ref.step(BitString("xy"), 16);
+    EXPECT_EQ(x, x_ref);
 }
 
 int main(int argc, char** argv)
