@@ -43,7 +43,7 @@ BitString MonkeyDuplex::genericStep(BitString I, size_t extract_bits, unsigned i
         state[i] ^= s[i];
     }
 
-    KeccakPStar(200,nstep)(state);
+    KeccakPStar(200,steps)(state);
     return BitString(state, extract_bits);
 }
 
