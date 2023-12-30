@@ -6,17 +6,6 @@
 #include <monkey.h>
 #include <Keccak-f.h>
 
-TEST(TestKetje, TestPadding)
-{
-    // Arrange
-    std::string data = "1234";
-    const std::string expected_output = "31 32 33 34 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80";
-    // Act
-    pad101(data, 25);
-    // Assert
-    EXPECT_EQ(format_hex(data), expected_output);
-}
-
 TEST(TestKetje, TestMonkeyDuplex){
     Krys::MonkeyDuplex md = Krys::MonkeyDuplex(20, 10, 1, 10);
     md.start(BitString("1234"));

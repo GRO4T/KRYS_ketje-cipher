@@ -1,12 +1,5 @@
 #include "utils.hpp"
 
-void pad101(std::string &data, unsigned int r){
-    const unsigned int remaining = r - (data.length() % r);
-    data.append(1, '\x01');
-    data.append(remaining-2, '\x00');
-    data.append(1, '\x80');
-}
-
 // https://stackoverflow.com/a/3382894
 std::string format_hex(const uint8_t *input, size_t n)
 {
