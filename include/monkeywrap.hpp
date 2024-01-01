@@ -7,6 +7,7 @@
 
 
 namespace Krys {
+    using Plaintext = BitString;
     using Ciphertext = BitString;
     using Tag = BitString;
 
@@ -16,6 +17,9 @@ namespace Krys {
         void initialize(const BitString& K, const BitString& N);
         std::pair<Ciphertext, Tag> wrap(
             const BitString& A, const BitString& B, uint ell
+        );
+        Plaintext unwrap(
+            const BitString& A, const BitString& C, const BitString& T
         );
       private:
         uint rho;

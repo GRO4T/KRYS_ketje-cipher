@@ -20,11 +20,12 @@ TEST(TestKetje, TestMonkeyDuplex){
     md_ref.start(BitString("1234"));
     BitString x_step_ref = md_ref.step(BitString("xy"), 16);
     BitString x_stride_ref = md_ref.stride(BitString("xy"), 16);
+
     EXPECT_EQ(x_step, x_step_ref);
     EXPECT_EQ(x_stride, x_stride_ref);
 }
 
-TEST(TestKetje, TestMonkeyWrap) {
+TEST(TestKetje, TestMonkeyWrapWrapAgainstKeccakToolsImplementation) {
     std::string K = "1234";
     std::string N = "5678";
     std::string A = "abc";
@@ -35,13 +36,33 @@ TEST(TestKetje, TestMonkeyWrap) {
     mw.initialize(BitString(K), BitString(N));
     auto [C, T] = mw.wrap(BitString(A), BitString(B), ell);
 
-    // KetjeJr ketje;
-    // ketje.initialize(K, N);
-    // std::string T_ref;
-    // auto C_ref = ketje.wrap(A, B, ell, T_ref);
+    KetjeJr ketje;
+    ketje.initialize(K, N);
+    std::string T_ref;
+    auto C_ref = ketje.wrap(A, B, ell, T_ref);
 
-    // EXPECT_EQ(C, BitString(C_ref));
-    // EXPECT_EQ(T, BitString(T_ref));
+    EXPECT_EQ(C, BitString(C_ref));
+    EXPECT_EQ(T, BitString(T_ref));
+}
+
+TEST(TestKetje, TestMonkeyWrapUnwrapAgainstKeccakToolsImplementation) {
+    std::string ciphertext = "\x1c\x44\xce";
+    std::string tag = "\x7d";
+    std::string K = "1234";
+    std::string N = "5678";
+    std::string A = "abc";
+    std::string expected_plaintext = "def";
+
+    Krys::MonkeyWrap mw(16, 12, 1, 6);
+    mw.initialize(BitString(K), BitString(N));
+    auto plaintext = mw.unwrap(BitString(A), BitString(ciphertext), BitString(tag));
+
+    KetjeJr ketje;
+    ketje.initialize(K, N);
+    auto plaintext_ref = ketje.unwrap(A, ciphertext, tag);
+
+    EXPECT_EQ(plaintext, plaintext_ref);
+    EXPECT_EQ(plaintext.str(), expected_plaintext);
 }
 
 int main(int argc, char** argv)

@@ -33,8 +33,8 @@ BitString MonkeyDuplex::stride(BitString I, size_t extract_bits){
 }
 
 BitString MonkeyDuplex::genericStep(BitString I, size_t extract_bits, unsigned int steps){
-    // assert(I.size() <= r-2);
-    // assert(extract_bits <= r);
+    assert(I.size() <= r-2);
+    assert(extract_bits <= r);
 
     I = I || BitString::pad101(r, I.size());
     I = I || BitString::zeroes(STATE_BITS - r);
