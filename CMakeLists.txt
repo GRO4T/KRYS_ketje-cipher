@@ -32,12 +32,12 @@ target_link_libraries(KeccakToolsTest PRIVATE GTest::GTest KeccakTools)
 add_test(UnitTests KeccakToolsTest)
 
 # Test our Ketje implementation
-add_executable(KetjeTest test/test_ketje.cpp src/monkeyduplex.cpp src/utils.cpp)
-target_include_directories(KetjeTest PRIVATE include)
+add_executable(KetjeTest test/test_ketje.cpp src/monkeywrap.cpp src/monkeyduplex.cpp src/utils.cpp)
+target_include_directories(KetjeTest PRIVATE include lib/KeccakTools)
 target_link_libraries(KetjeTest PRIVATE GTest::GTest KeccakTools)
 add_test(UnitTests KetjeTest)
 
 # Build source
-add_executable(Ketje main.cpp src/monkeyduplex.cpp src/utils.cpp)
+add_executable(Ketje main.cpp src/monkeywrap.cpp src/monkeyduplex.cpp src/utils.cpp)
 target_include_directories(Ketje PRIVATE include)
 target_link_libraries(Ketje PRIVATE KeccakTools)
