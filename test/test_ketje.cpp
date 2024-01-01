@@ -9,6 +9,9 @@
 #include "Keccak-f.h"
 #include "Ketjev2.h"
 
+/**
+ * Test Krys::MonkeyDuplex against KeccakTools implementation.
+*/
 TEST(TestKetje, TestMonkeyDuplex){
     Krys::MonkeyDuplex md = Krys::MonkeyDuplex(20, 10, 1, 10);
     md.start(BitString("1234"));
@@ -25,41 +28,47 @@ TEST(TestKetje, TestMonkeyDuplex){
     EXPECT_EQ(x_stride, x_stride_ref);
 }
 
-TEST(TestKetje, TestMonkeyWrapWrapAgainstKeccakToolsImplementation) {
-    std::string K = "1234";
-    std::string N = "5678";
-    std::string A = "abc";
-    std::string B = "def";
-    uint ell = 8;
+/**
+ * Test Krys::MonkeyWrap::wrap against KeccakTools implementation.
+*/
+TEST(TestKetje, TestMonkeyWrapWrap) {
+    std::string key = "1234";
+    std::string nonce = "5678";
+    std::string associated_data = "abc";
+    std::string plaintext = "def";
+    uint extract_bits = 8;
 
     Krys::MonkeyWrap mw(16, 12, 1, 6);
-    mw.initialize(BitString(K), BitString(N));
-    auto [C, T] = mw.wrap(BitString(A), BitString(B), ell);
+    mw.initialize(BitString(key), BitString(nonce));
+    auto [ciphertext, tag] = mw.wrap(BitString(associated_data), BitString(plaintext), extract_bits);
 
-    KetjeJr ketje;
-    ketje.initialize(K, N);
-    std::string T_ref;
-    auto C_ref = ketje.wrap(A, B, ell, T_ref);
+    KetjeJr ketje_ref;
+    ketje_ref.initialize(key, nonce);
+    std::string tag_ref;
+    auto ciphertext_ref = ketje_ref.wrap(associated_data, plaintext, extract_bits, tag_ref);
 
-    EXPECT_EQ(C, BitString(C_ref));
-    EXPECT_EQ(T, BitString(T_ref));
+    EXPECT_EQ(ciphertext, BitString(ciphertext_ref));
+    EXPECT_EQ(tag, BitString(tag_ref));
 }
 
-TEST(TestKetje, TestMonkeyWrapUnwrapAgainstKeccakToolsImplementation) {
+/**
+ * Test Krys::MonkeyWrap::unwrap against KeccakTools implementation.
+*/
+TEST(TestKetje, TestMonkeyWrapUnwrap) {
     std::string ciphertext = "\x1c\x44\xce";
     std::string tag = "\x7d";
-    std::string K = "1234";
-    std::string N = "5678";
-    std::string A = "abc";
+    std::string key = "1234";
+    std::string nonce = "5678";
+    std::string associated_data = "abc";
     std::string expected_plaintext = "def";
 
     Krys::MonkeyWrap mw(16, 12, 1, 6);
-    mw.initialize(BitString(K), BitString(N));
-    auto plaintext = mw.unwrap(BitString(A), BitString(ciphertext), BitString(tag));
+    mw.initialize(BitString(key), BitString(nonce));
+    auto plaintext = mw.unwrap(BitString(associated_data), BitString(ciphertext), BitString(tag));
 
-    KetjeJr ketje;
-    ketje.initialize(K, N);
-    auto plaintext_ref = ketje.unwrap(A, ciphertext, tag);
+    KetjeJr ketje_ref;
+    ketje_ref.initialize(key, nonce);
+    auto plaintext_ref = ketje_ref.unwrap(associated_data, ciphertext, tag);
 
     EXPECT_EQ(plaintext, plaintext_ref);
     EXPECT_EQ(plaintext.str(), expected_plaintext);

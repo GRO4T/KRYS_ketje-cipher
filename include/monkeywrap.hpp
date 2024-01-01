@@ -14,12 +14,12 @@ namespace Krys {
     class MonkeyWrap {
       public:
         MonkeyWrap(uint rho, uint nstart, uint nstep, uint nstride);
-        void initialize(const BitString& K, const BitString& N);
+        void initialize(const BitString& key, const BitString& nonce);
         std::pair<Ciphertext, Tag> wrap(
-            const BitString& A, const BitString& B, uint ell
+            const BitString& associated_data, const BitString& plaintext, uint extract_bits
         );
         Plaintext unwrap(
-            const BitString& A, const BitString& C, const BitString& T
+            const BitString& associated_data, const BitString& ciphertext, const BitString& tag
         );
       private:
         uint rho;

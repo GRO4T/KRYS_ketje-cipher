@@ -5,57 +5,57 @@ namespace Krys {
     MonkeyWrap::MonkeyWrap(uint rho, uint nstart, uint nstep, uint nstride)
         : rho(rho), duplex(rho + 4, nstart, nstep, nstride) {}
 
-    void MonkeyWrap::initialize(const BitString& K, const BitString& N) {
+    void MonkeyWrap::initialize(const BitString& key, const BitString& nonce) {
         // TODO: add asserts
-        duplex.start(BitString::keypack(K, K.size() + 16) || N);
+        duplex.start(BitString::keypack(key, key.size() + 16) || nonce);
     }
 
     std::pair<Ciphertext, Tag> MonkeyWrap::wrap(
-        const BitString& A, const BitString& B, uint ell
+        const BitString& associated_data, const BitString& plaintext, uint extract_bits
     ) {
-        Ciphertext C;
-        Blocks     Ab(A, rho), Bb(B, rho), Cb(C, rho); // TODO: implement own Blocks
+        Ciphertext ciphertext;
+        Blocks     A(associated_data, rho), B(plaintext, rho), C(ciphertext, rho); // TODO: implement own Blocks
 
-        for (uint i = 0; i <= Ab.size() - 2; ++i) {
-            duplex.step(Ab[i] || 0 || 0, 0);
+        for (uint i = 0; i <= A.size() - 2; ++i) {
+            duplex.step(A[i] || 0 || 0, 0);
         }
-        BitString Z = duplex.step(Ab[Ab.size() - 1] || 0 || 1, Bb[0].size());
-        Cb[0] = Bb[0] ^ Z;
-        for ( unsigned int i = 0; i <= Bb.size() - 2; ++i ) {
-            Z = duplex.step(Bb[i] || 1 || 1, Bb[i + 1].size());
-            Cb[i + 1] = Bb[i + 1] ^ Z;
+        BitString Z = duplex.step(A[A.size() - 1] || 0 || 1, B[0].size());
+        C[0] = B[0] ^ Z;
+        for ( unsigned int i = 0; i <= B.size() - 2; ++i ) {
+            Z = duplex.step(B[i] || 1 || 1, B[i + 1].size());
+            C[i + 1] = B[i + 1] ^ Z;
         }
-        BitString T = duplex.stride(Bb[Bb.size() - 1] || 1 || 0, rho);
-        while ( T.size() < ell ) {
-            T = T || duplex.step(BitString(0), rho);
+        BitString tag = duplex.stride(B[B.size() - 1] || 1 || 0, rho);
+        while ( tag.size() < extract_bits ) {
+            tag = tag || duplex.step(BitString(0), rho);
         }
-        T.truncate(ell);
+        tag.truncate(extract_bits);
 
-        return {C, T};
+        return {ciphertext, tag};
     }
 
     Plaintext MonkeyWrap::unwrap(
-        const BitString& A, const BitString& C, const BitString& T
+        const BitString& associated_data, const BitString& ciphertext, const BitString& tag
     ) {
         Plaintext plaintext;
-        Blocks Ab(A, rho), Bb(plaintext, rho), Cb(C, rho);
+        Blocks A(associated_data, rho), B(plaintext, rho), C(ciphertext, rho);
 
-        for (uint i = 0; i <= Ab.size() - 2; ++i) {
-            duplex.step(Ab[i] || 0 || 0, 0);
+        for (uint i = 0; i <= A.size() - 2; ++i) {
+            duplex.step(A[i] || 0 || 0, 0);
         }
-        BitString Z = duplex.step(Ab[Ab.size() - 1] || 0 || 1, Cb[0].size());
-        Bb[0] = Cb[0] ^ Z;
-        for (uint i = 0; i <= Cb.size() - 2; ++i) {
-            Z = duplex.step(Bb[i] || 1 || 1, Cb[i + 1].size());
-            Bb[i + 1] = Cb[i + 1] ^ Z;
+        BitString Z = duplex.step(A[A.size() - 1] || 0 || 1, C[0].size());
+        B[0] = C[0] ^ Z;
+        for (uint i = 0; i <= C.size() - 2; ++i) {
+            Z = duplex.step(B[i] || 1 || 1, C[i + 1].size());
+            B[i + 1] = C[i + 1] ^ Z;
         }
-        BitString Tprime = duplex.stride(Bb[Cb.size() - 1] || 1 || 0, rho);
-        while (Tprime.size() < T.size()) {
-            Tprime = Tprime || duplex.step(BitString(0), rho);
+        BitString unwraped_tag = duplex.stride(B[C.size() - 1] || 1 || 0, rho);
+        while (unwraped_tag.size() < tag.size()) {
+            unwraped_tag = unwraped_tag || duplex.step(BitString(0), rho);
         }
-        Tprime.truncate(T.size());
+        unwraped_tag.truncate(tag.size());
 
-        if (T != Tprime) {
+        if (tag != unwraped_tag) {
             throw std::runtime_error("MonkeyWrapUnwrapError: Tags do not match after unwrap.");
         }
         return plaintext;
