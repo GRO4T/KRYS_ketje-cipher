@@ -1,12 +1,16 @@
+#include <cassert>
 #include "monkeywrap.hpp"
-
 
 namespace Krys {
     MonkeyWrap::MonkeyWrap(uint rho, uint nstart, uint nstep, uint nstride)
-        : rho(rho), duplex(rho + 4, nstart, nstep, nstride) {}
+        : rho(rho), duplex(rho + 4, nstart, nstep, nstride) {
+        assert(rho < STATE_BITS - 4);
+    }
 
     void MonkeyWrap::initialize(const BitString& key, const BitString& nonce) {
-        // TODO: add asserts
+        assert(key.size() < STATE_BITS - 18);
+        assert(key.size() % 8 == 0);
+        assert(nonce.size() < STATE_BITS - key.size() - 18);
         duplex.start(BitString::keypack(key, key.size() + 16) || nonce);
     }
 
